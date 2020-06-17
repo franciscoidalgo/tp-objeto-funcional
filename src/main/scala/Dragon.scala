@@ -1,31 +1,37 @@
-trait Criterio extends ((Dragon, Vikingo) => Boolean)
+trait CriterioDeMontura extends ((Dragon, Vikingo) => Boolean)
 
-object criterioDanio extends Criterio {
+object criterioDanio extends CriterioDeMontura {
   override def apply(dragon : Dragon, vikingo : Vikingo): Boolean = dragon.calcularDanio() > vikingo.calcularDanio()
 }
 
-case class criterioItem(item : Item) extends Criterio{
+case class criterioItem(item : Item) extends CriterioDeMontura{
   override def apply(dragon: Dragon, vikingo: Vikingo) : Boolean = vikingo.item.contains(item)
 }
 
-case class Dragon (velocidadBase : Int = 60, peso : Int, raza : Raza, criterioDeMontura : Criterio){
-  def calcularDanio() : Int = raza.mostrarDanio(this)
+case class Dragon (velocidadBase : Double = 60, peso : Double, raza : Raza, criterioDeMontura : CriterioDeMontura){
+
+  def calcularDanio() : Double = raza.mostrarDanio(this)
+
   def puedeMontar(vikingo: Vikingo) : Boolean = criterioDeMontura (this, vikingo : Vikingo)
+
+  def calcularVelocidad (): Double = velocidadBase - peso
+
+  def puedeCargar() : Double = peso * 0.2
 }
 
 
 trait Raza{
-  def mostrarDanio(dragon: Dragon) : Int
+  def mostrarDanio(dragon: Dragon) : Double
 }
 
-case class FuriaNocturna(danio : Int) extends Raza{
-  def mostrarDanio(dragon: Dragon): Int = danio
+case class FuriaNocturna(danio : Double) extends Raza{
+  def mostrarDanio(dragon: Dragon): Double = danio
 }
 
 case class NadderMortifero () extends Raza{
-  def mostrarDanio(dragon: Dragon) : Int = 150
+  def mostrarDanio(dragon: Dragon) : Double = 150
 }
 
 case class Gronckle () extends Raza{
-  def mostrarDanio (dragon: Dragon) : Int = dragon.peso * 5
+  def mostrarDanio (dragon: Dragon) : Double = dragon.peso * 5
 }
