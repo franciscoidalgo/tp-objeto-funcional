@@ -8,11 +8,11 @@ case class criterioItem(item : Item) extends CriterioDeMontura{
   override def apply(dragon: Dragon, vikingo: Vikingo) : Boolean = vikingo.item.contains(item)
 }
 
-case class Dragon (velocidadBase : Double = 60, peso : Double, raza : Raza, criterioDeMontura : CriterioDeMontura){
+case class Dragon (velocidadBase : Double = 60, peso : Double, raza : Raza, criteriosDeMontura : List[CriterioDeMontura]){
 
   def calcularDanio() : Double = raza.mostrarDanio(this)
 
-  def puedeMontar(vikingo: Vikingo) : Boolean = criterioDeMontura (this, vikingo : Vikingo)
+  def puedeMontar(vikingo: Vikingo) : Boolean = criteriosDeMontura.forall((criterioDeMontura : CriterioDeMontura) => criterioDeMontura(this, vikingo))
 
   def calcularVelocidad (): Double = velocidadBase - peso
 
